@@ -16,6 +16,7 @@
 #
 from ctypes import *
 import platform
+import os
 
 ZCAN_DEVICE_TYPE = c_uint
 
@@ -253,7 +254,10 @@ class IProperty(Structure):
 class ZCAN(object):
     def __init__(self):
         if platform.system() == "Windows":
-            self.__dll = windll.LoadLibrary("./zlgcan.dll")
+            arch = platform.architecture()[0]
+            dll_folder = "zlgcan_x86" if arch == "32bit" else "zlgcan_x64"
+            dll_path = os.path.join(os.path.dirname(__file__), "drive", dll_folder, "zlgcan.dll")
+            self.__dll = windll.LoadLibrary(dll_path)
         else:
             print("No support now!")
         if self.__dll == None:
